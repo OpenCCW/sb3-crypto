@@ -1,0 +1,44 @@
+{
+  "name": "@openccw/sb3-crypto",
+  "version": "0.0.1",
+  "description": "基于 Web Crypto API + JSZip 实现 CCW sb3 文件的加密和解密。",
+  "author": "bddjr",
+  "license": "MIT",
+  "type": "module",
+  "main": "dist/main.js",
+  "types": "dist/main.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "rimraf dist && tsc",
+    "test": "pnpm build && pnpm test:only",
+    "test:only": "node scripts/test.mjs",
+    "prepublishOnly": "pnpm test"
+  },
+  "keywords": [
+    "ccw",
+    "ccw-api",
+    "openccw",
+    "open-ccw",
+    "gandi-ide",
+    "gandi"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OpenCCW/sb3-crypto.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "jszip": "^3.10.1",
+    "parse-base64-like-crypto-js": "^0.0.1"
+  },
+  "devDependencies": {
+    "@bddjr/rimraf": "^0.1.1",
+    "@openccw/sb3-crypto": "link:",
+    "@types/node": "^26.2.0",
+    "typescript": "^7.0.2"
+  }
+}

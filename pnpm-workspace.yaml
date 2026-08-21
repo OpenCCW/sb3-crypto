@@ -1,0 +1,2 @@
+minimumReleaseAgeExclude:
+  - parse-base64-like-crypto-js
