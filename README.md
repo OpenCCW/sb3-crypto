@@ -30,7 +30,7 @@ const projectLinkURL = new URL(projectLink)
 // 从网络获取 sb3 文件。
 // 文件名不是 MD5 ，同名文件的内容是可变的，所以不使用缓存。
 projectLinkURL.searchParams.append('t', Date.now().toString())
-const response = await fetch(projectLink, { cache: 'no-store' })
+const response = await fetch(projectLinkURL, { cache: 'no-store' })
 if (!response.ok) {
     throw Error(`failed to fetch: HTTP ${response.status} ${response.statusText}`)
 }
