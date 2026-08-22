@@ -21,15 +21,18 @@ for (const inputFileStat of fs.readdirSync(inputDir, { withFileTypes: true })) {
     const outputEncryptFileName = inputFileName.replace(/\.sb3$/, '.json')
 
     const inputFilePath = path.join(inputDir, inputFileName)
-    const outputDecryptFilePath = path.join(outputDecryptDir, outputEncryptFileName)
+    const outputDecryptJsonFilePath = path.join(outputDecryptDir, outputEncryptFileName)
+    const outputDecryptSb3FilePath = path.join(outputDecryptDir, inputFileName)
     const outputEncryptFilePath = path.join(outputEncryptDir, inputFileName)
 
     console.log('decrypt', inputFilePath)
     const inputFileData = fs.readFileSync(inputFilePath)
     const decryptedProjectJson = await sb3Crypto.decrypt.decryptToProjectJson(inputFileData, inputFileName)
-    fs.writeFileSync(outputDecryptFilePath, decryptedProjectJson)
+    fs.writeFileSync(outputDecryptJsonFilePath, decryptedProjectJson)
+    const decryptedSb3 = await sb3Crypto.decrypt.decryptToSb3(inputFileData, inputFileName)
+    fs.writeFileSync(outputDecryptSb3FilePath, decryptedSb3)
 
-    console.log('encrypt', outputDecryptFilePath)
+    console.log('encrypt', outputDecryptJsonFilePath)
     const encryptedSb3 = await sb3Crypto.encrypt.encryptProjectJson(decryptedProjectJson, inputFileName)
     fs.writeFileSync(outputEncryptFilePath, encryptedSb3)
 
