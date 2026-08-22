@@ -7,12 +7,15 @@ import { cryptoTransform } from "./crypto-transform.js";
 const _PK = Uint8Array.of(80, 75, 3, 4, 10, 0, 0, 0); // PK ....
 
 const _decryptSb3 = async (data: Uint8Array, fileName: string): Promise<Uint8Array> => {
-    switch (data[0] << 8 | data[1]) {
-        case 0x504b:
+    // 若 data[2] 不是可见的 ASCII 字符，则 data 是二进制数据。
+    switch (data[0] << 16 | data[1] << 8 | data[2]) {
+        case 0x504b03:
             // PK ....
+            // [80, 75, 3, 4, 10, 0, 0, 0]
             return data
-        case 0x377a:
+        case 0x377abc:
             // 7z ....
+            // [55, 122, 188, 175, 9, 5, 2, 7]
             // 保持和输入数据一样的长度（前 8 字节将被签名覆盖），
             // 但必须保证长度不少于 8 字节，否则放不下签名。
             if (data.length < 8)
