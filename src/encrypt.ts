@@ -1,7 +1,7 @@
 // 部分代码参考自 BenPaoDeXiaoZhi (MengFuzi)
 
 import JSZip from "jszip";
-import { ALGORITHM, fileNameToKey } from "./key.js";
+import { cryptoTransform } from "./crypto-transform.js";
 import { bytesToBase64 } from "./to-base64.js";
 
 export const encryptProjectJson = async (projectJson: string, fileName: string): Promise<string> => {
@@ -20,11 +20,7 @@ export const encryptProjectJson = async (projectJson: string, fileName: string):
         },
     });
 
-    const { key, iv } = await fileNameToKey(fileName);
-    const encryptedBuffer = await crypto.subtle.encrypt(
-        { name: ALGORITHM, iv },
-        key,
-        new TextEncoder().encode(sb3Bytes.toString())
-    )
+    const data = new TextEncoder().encode(sb3Bytes.toString())
+    const encryptedBuffer = await cryptoTransform("encrypt", fileName, data);
     return bytesToBase64(new Uint8Array(encryptedBuffer))
 }

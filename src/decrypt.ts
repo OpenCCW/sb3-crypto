@@ -2,7 +2,7 @@
 
 import JSZip from "jszip";
 import parseBase64 from "parse-base64-like-crypto-js";
-import { ALGORITHM, fileNameToKey } from "./key.js";
+import { cryptoTransform } from "./crypto-transform.js";
 
 const _PK = Uint8Array.of(80, 75, 3, 4, 10, 0, 0, 0); // PK ....
 
@@ -23,12 +23,8 @@ const _decryptSb3 = async (data: Uint8Array, fileName: string): Promise<Uint8Arr
             return out;
     }
 
-    const { key, iv } = await fileNameToKey(fileName);
-    const decryptedBuffer = await crypto.subtle.decrypt(
-        { name: ALGORITHM, iv },
-        key,
-        parseBase64(new TextDecoder().decode(data))
-    );
+    const cipherData = parseBase64(new TextDecoder().decode(data))
+    const decryptedBuffer = await cryptoTransform("decrypt", fileName, cipherData);
     const bytesString = new TextDecoder().decode(decryptedBuffer);
     return Uint8Array.from(bytesString.split(","));
 }
