@@ -4,8 +4,6 @@ import JSZip from "jszip";
 import parseBase64 from "parse-base64-like-crypto-js";
 import { cryptoTransform } from "./crypto-transform.js";
 
-const _PK = Uint8Array.of(80, 75, 3, 4, 10, 0, 0, 0); // PK ....
-
 const _decryptSb3 = async (data: Uint8Array, fileName: string): Promise<Uint8Array> => {
     if (data.length < 8)
         throw Error(`failed to decrypt sb3: data must have at least 8 bytes`);
@@ -23,7 +21,7 @@ const _decryptSb3 = async (data: Uint8Array, fileName: string): Promise<Uint8Arr
             // 但必须保证长度不少于 8 字节，否则放不下签名。
             // 为了防止 Buffer 类型导致意外情况，这里不能用 slice 。
             const out = Uint8Array.from(data);
-            out.set(_PK);
+            out.set([80, 75, 3, 4, 10, 0, 0, 0]);
             return out;
     }
 
