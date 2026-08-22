@@ -47,7 +47,7 @@ const _decrypt = async (data: Uint8Array | ArrayBuffer, fileName: string, toSb3:
     const t = json.length - 1
     const n = t % 10
     json = decodeURIComponent(atob(
-        json.slice(0, +n) + json.charAt(t) + json.slice(+n + 1, t)
+        json.slice(0, +n) + json[t] + json.slice(+n + 1, t)
     ))
 
     if (!toSb3) return json;
