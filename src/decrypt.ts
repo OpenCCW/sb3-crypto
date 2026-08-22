@@ -13,12 +13,12 @@ const _decryptSb3 = async (data: Uint8Array, fileName: string): Promise<Uint8Arr
         case 0x504b03:
             // PK ....
             // [80, 75, 3, 4, 10, 0, 0, 0]
+            // 未加密。
             return data
         case 0x377abc:
             // 7z ....
             // [55, 122, 188, 175, 9, 5, 2, 7]
-            // 保持和输入数据一样的长度（前 8 字节将被签名覆盖），
-            // 但必须保证长度不少于 8 字节，否则放不下签名。
+            // zip 头被改成 7z 头（混淆），这里把它改回来。
             // 为了防止 Buffer 类型导致意外情况，这里不能用 slice 。
             const out = Uint8Array.from(data);
             out.set([80, 75, 3, 4, 10, 0, 0, 0]);
