@@ -41,7 +41,7 @@ const _decrypt = async (data: Uint8Array | ArrayBuffer, fileName: string, toSb3:
     const zip = await JSZip.loadAsync(sb3);
     let json = await zip.file("project.json")!.async("text");
 
-    if (json.startsWith("{"))
+    if (/^[ \n\r\t]*\{/.test(json))
         return toSb3 ? sb3 : json;
 
     const t = json.length - 1
