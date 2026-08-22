@@ -23,7 +23,7 @@ const _decryptSb3 = async (data: Uint8Array, fileName: string): Promise<Uint8Arr
             // 但必须保证长度不少于 8 字节，否则放不下签名。
             // 为了防止 Buffer 类型导致意外情况，这里不能用 slice 。
             const out = Uint8Array.from(data);
-            out.set(_PK, 0);
+            out.set(_PK);
             return out;
     }
 
