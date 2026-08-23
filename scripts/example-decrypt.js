@@ -25,3 +25,6 @@ console.log('project.json', decryptedProjectJson)
 
 // 解密并返回 sb3 (Uint8Array)
 // const decryptedSb3 = await sb3Crypto.decrypt.decryptToSb3(data, sb3FileName)
+
+// 解密并返回 JSZip 对象
+// const decryptedZip = await sb3Crypto.decrypt.decryptToJszip(data, sb3FileName)

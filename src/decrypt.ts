@@ -31,7 +31,7 @@ const _decryptSb3 = async (data: Uint8Array, fileName: string): Promise<Uint8Arr
     return Uint8Array.from(bytesString.split(","));
 }
 
-const _decrypt = async (data: Uint8Array | ArrayBuffer, fileName: string, toSb3: boolean) => {
+const _decrypt = async (data: Uint8Array | ArrayBuffer, fileName: string, mode: 0 | 1 | 2) => {
     if (data[Symbol.toStringTag] === 'ArrayBuffer')
         data = new Uint8Array(data);
 
@@ -39,8 +39,11 @@ const _decrypt = async (data: Uint8Array | ArrayBuffer, fileName: string, toSb3:
     const zip = await JSZip.loadAsync(sb3);
     let json = await zip.file("project.json")!.async("text");
 
-    if (/^[ \n\r\t]*\{/.test(json))
-        return toSb3 ? sb3 : json;
+    if (/^[ \n\r\t]*\{/.test(json)) {
+        if (mode == 0) return sb3;
+        if (mode == 1) return json;
+        return zip;
+    }
 
     const t = json.length - 1
     const n = t % 10
@@ -48,16 +51,28 @@ const _decrypt = async (data: Uint8Array | ArrayBuffer, fileName: string, toSb3:
         json.slice(0, +n) + json[t] + json.slice(+n + 1, t)
     ))
 
-    if (!toSb3) return json;
+    if (mode == 1) return json;
 
     zip.file("project.json", json)
-    return zip.generateAsync({ type: "uint8array" })
+    if (mode == 2) return zip;
+
+    return zip.generateAsync({
+        type: "uint8array",
+        compression: "DEFLATE",
+        compressionOptions: {
+            level: 6,
+        },
+    })
 }
 
 export const decryptToSb3 = (data: Uint8Array | ArrayBuffer, fileName: string) => (
-    _decrypt(data, fileName, true) as Promise<Uint8Array>
+    _decrypt(data, fileName, 0) as Promise<Uint8Array>
 )
 
 export const decryptToProjectJson = (data: Uint8Array | ArrayBuffer, fileName: string) => (
-    _decrypt(data, fileName, false) as Promise<string>
+    _decrypt(data, fileName, 1) as Promise<string>
+)
+
+export const decryptToJszip = (data: Uint8Array | ArrayBuffer, fileName: string) => (
+    _decrypt(data, fileName, 2) as Promise<JSZip>
 )

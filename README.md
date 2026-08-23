@@ -54,6 +54,13 @@ console.log('project.json', decryptedProjectJson)
 const decryptedSb3 = await sb3Crypto.decrypt.decryptToSb3(data, sb3FileName)
 ```
 
+也可以解密并返回 JSZip 对象：
+
+```js
+// 解密并返回 JSZip 对象
+const decryptedZip = await sb3Crypto.decrypt.decryptToJszip(data, sb3FileName)
+```
+
 ### 加密
 
 加密 `project.json` 并返回 sb3 ：
