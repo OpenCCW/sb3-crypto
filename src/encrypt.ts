@@ -3,6 +3,7 @@
 import JSZip from "jszip";
 import { cryptoTransform } from "./crypto-transform.js";
 import { bytesToBase64 } from "./to-base64.js";
+import { u8aJoin } from "./u8a-join.js";
 
 export const encryptProjectJson = async (projectJson: string, fileName: string): Promise<string> => {
     let b64json = btoa(encodeURIComponent(projectJson));
@@ -20,7 +21,7 @@ export const encryptProjectJson = async (projectJson: string, fileName: string):
         },
     });
 
-    const data = new TextEncoder().encode(sb3Bytes.toString())
+    const data = u8aJoin(sb3Bytes)
     const encryptedBuffer = await cryptoTransform("encrypt", fileName, data);
     return bytesToBase64(new Uint8Array(encryptedBuffer))
 }

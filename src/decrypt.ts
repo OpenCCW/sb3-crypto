@@ -3,6 +3,7 @@
 import JSZip from "jszip";
 import parseBase64 from "parse-base64-like-crypto-js";
 import { cryptoTransform } from "./crypto-transform.js";
+import { u8aSplit } from "./u8a-join.js";
 
 const _decryptSb3 = async (data: Uint8Array, fileName: string): Promise<Uint8Array> => {
     if (data.length < 8)
@@ -14,7 +15,7 @@ const _decryptSb3 = async (data: Uint8Array, fileName: string): Promise<Uint8Arr
             // PK ....
             // [80, 75, 3, 4, 10, 0, 0, 0]
             // 未加密。
-            return data
+            return Uint8Array.from(data)
         case 0x377abc:
             // 7z ....
             // [55, 122, 188, 175, 9, 5, 2, 7]
@@ -27,8 +28,7 @@ const _decryptSb3 = async (data: Uint8Array, fileName: string): Promise<Uint8Arr
 
     const cipherData = parseBase64(new TextDecoder().decode(data))
     const decryptedBuffer = await cryptoTransform("decrypt", fileName, cipherData);
-    const bytesString = new TextDecoder().decode(decryptedBuffer);
-    return Uint8Array.from(bytesString.split(","));
+    return u8aSplit(new Uint8Array(decryptedBuffer));
 }
 
 const _decrypt = async (data: Uint8Array | ArrayBuffer, fileName: string, mode: 0 | 1 | 2) => {
@@ -48,7 +48,7 @@ const _decrypt = async (data: Uint8Array | ArrayBuffer, fileName: string, mode: 
     const t = json.length - 1
     const n = t % 10
     json = decodeURIComponent(atob(
-        json.slice(0, +n) + json[t] + json.slice(+n + 1, t)
+        json.slice(0, n) + json[t] + json.slice(n + 1, t)
     ))
 
     if (mode == 1) return json;
