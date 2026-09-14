@@ -7,8 +7,7 @@ import { u8aJoin } from "./u8a-join.js";
 
 export const encryptProjectJson = async (projectJson: string, fileName: string): Promise<string> => {
     let b64json = btoa(encodeURIComponent(projectJson));
-    const t = b64json.length;
-    const n = t % 10;
+    const n = b64json.length % 10;
     b64json = b64json.slice(0, n) + 'bxeygiuc12c'[n] + b64json.slice(n + 1) + b64json[n]
 
     const sb3 = new JSZip();

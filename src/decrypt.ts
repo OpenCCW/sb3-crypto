@@ -40,9 +40,11 @@ const _decrypt = async (data: Uint8Array | ArrayBuffer, fileName: string, mode: 
     let json = await zip.file("project.json")!.async("text");
 
     if (/^[ \n\r\t]*\{/.test(json)) {
-        if (mode == 0) return sb3;
-        if (mode == 1) return json;
-        return zip;
+        switch (mode) {
+            case 0: return sb3;
+            case 1: return json;
+            default: return zip;
+        }
     }
 
     const t = json.length - 1
@@ -51,10 +53,10 @@ const _decrypt = async (data: Uint8Array | ArrayBuffer, fileName: string, mode: 
         json.slice(0, n) + json[t] + json.slice(n + 1, t)
     ))
 
-    if (mode == 1) return json;
+    if (mode === 1) return json;
 
     zip.file("project.json", json)
-    if (mode == 2) return zip;
+    if (mode === 2) return zip;
 
     return zip.generateAsync({
         type: "uint8array",
