@@ -1,5 +1,9 @@
 // 部分代码参考自 BenPaoDeXiaoZhi (MengFuzi)
 
+// 逆向代码：
+//   在 vendor~main 搜 .AES.
+//   在 vendor~main 搜 .split(",")))
+
 import JSZip from "jszip";
 import parseBase64 from "parse-base64-like-crypto-js";
 import { cryptoTransform } from "./crypto-transform.js";
