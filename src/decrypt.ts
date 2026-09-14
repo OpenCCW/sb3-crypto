@@ -15,14 +15,21 @@ const _decryptSb3 = async (data: Uint8Array, fileName: string): Promise<Uint8Arr
             // PK ....
             // [80, 75, 3, 4, 10, 0, 0, 0]
             // 未加密。
-            return Uint8Array.from(data)
+            return new Uint8Array(data)
         case 0x377abc:
             // 7z ....
             // [55, 122, 188, 175, 9, 5, 2, 7]
             // zip 头被改成 7z 头（混淆），这里把它改回来。
             // 为了防止 Buffer 类型导致意外情况，这里不能用 slice 。
-            const out = Uint8Array.from(data);
-            out.set([80, 75, 3, 4, 10, 0, 0, 0]);
+            const out = new Uint8Array(data);
+            out[0] = 80
+            out[1] = 75
+            out[2] = 3
+            out[3] = 4
+            out[4] = 10
+            out[5] = 0
+            out[6] = 0
+            out[7] = 0
             return out;
     }
 
