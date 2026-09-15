@@ -1,3 +1,4 @@
+// 尽可能调用原生底层实现
 export const bytesToBase64: (bytes: Uint8Array<ArrayBuffer>) => string | Promise<string> = (
     typeof Uint8Array.prototype.toBase64 == 'function' // ES2026, Node.js v25
         ? (bytes) => bytes.toBase64()
