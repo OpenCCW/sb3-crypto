@@ -46,7 +46,20 @@ const _decryptSb3 = async (data: Uint8Array, fileName: string): Promise<{
     };
 }
 
-const _prepareDecrypt = async (data: Uint8Array | ArrayBuffer, fileName: string) => {
+/**
+ * 解密，然后自己处理返回的数据。  
+ * ⚠️ 更自由，但 **需要更谨慎** 。  
+ * - 返回的 `sb3IsCopied`
+ *   - `true` 则返回的 `sb3` 已拷贝（经过解密），  
+ *     但这 **不能** 代表返回的 `sb3` 和 `zip` 里的 `project.json` 是正确的。  
+ *   - `false` 则返回的 `sb3` 未经过拷贝（无需解密），它就是输入的 `data` 参数的值，  
+ *     但这 **不能** 代表返回的 `sb3` 和 `zip` 里的 `project.json` 是正确的。  
+ * - 返回的 `jsonIsDecrypted`
+ *   - `true` 则返回的 `json` 是经过解密的，`sb3` 和 `zip` 里的 `project.json` 未解密，  
+ *     需自行 `zip.file("project.json", json)` ，然后自行使用 `zip.generateAsync` 生成新的 `sb3` 。  
+ *   - `false` 则 `json` 未解密，返回的 `sb3` 和 `zip` 里的 `project.json` 未加密。  
+ */
+export const prepareDecrypt = async (data: Uint8Array | ArrayBuffer, fileName: string) => {
     if (data[Symbol.toStringTag] === 'ArrayBuffer')
         data = new Uint8Array(data);
 
@@ -66,13 +79,20 @@ const _prepareDecrypt = async (data: Uint8Array | ArrayBuffer, fileName: string)
         ))
     }
 
-    return { sb3, sb3IsCopied, zip, json, jsonIsEncrypted };
+    return {
+        sb3,
+        sb3IsCopied,
+        zip,
+        json,
+        jsonIsDecrypted: jsonIsEncrypted
+    };
 }
 
+/** 解密并返回 `Uint8Array` ，返回值经过拷贝。 */
 export const decryptToSb3 = async (data: Uint8Array | ArrayBuffer, fileName: string): Promise<Uint8Array> => {
-    const { sb3, sb3IsCopied, zip, json, jsonIsEncrypted } = await _prepareDecrypt(data, fileName);
+    const { sb3, sb3IsCopied, zip, json, jsonIsDecrypted } = await prepareDecrypt(data, fileName);
 
-    if (!jsonIsEncrypted) return sb3IsCopied ? sb3 : new Uint8Array(sb3);
+    if (!jsonIsDecrypted) return sb3IsCopied ? sb3 : new Uint8Array(sb3);
 
     zip.file("project.json", json)
     return zip.generateAsync({
@@ -84,13 +104,15 @@ export const decryptToSb3 = async (data: Uint8Array | ArrayBuffer, fileName: str
     })
 }
 
+/** 解密并返回 `project.json` */
 export const decryptToProjectJson = async (data: Uint8Array | ArrayBuffer, fileName: string): Promise<string> => {
-    const { json } = await _prepareDecrypt(data, fileName);
+    const { json } = await prepareDecrypt(data, fileName);
     return json;
 }
 
+/** 解密并返回 `JSZip` */
 export const decryptToJszip = async (data: Uint8Array | ArrayBuffer, fileName: string): Promise<JSZip> => {
-    const { zip, json, jsonIsEncrypted } = await _prepareDecrypt(data, fileName);
-    if (jsonIsEncrypted) zip.file("project.json", json);
+    const { zip, json, jsonIsDecrypted } = await prepareDecrypt(data, fileName);
+    if (jsonIsDecrypted) zip.file("project.json", json);
     return zip;
 }
