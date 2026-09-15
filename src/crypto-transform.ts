@@ -10,20 +10,24 @@ export const cryptoTransform = async (
     fileName: string,
     data: BufferSource
 ): Promise<ArrayBuffer> => {
-    // fileName 去掉前面的路径，去掉 ".sb3" 扩展名
-    let i = fileName.lastIndexOf('/')
-    if (i !== -1)
-        fileName = fileName.slice(i)
-    if (fileName.endsWith(".sb3"))
-        fileName = fileName.slice(0, -4)
+    // fileName 去掉 ".sb3" 扩展名，去掉前面的路径
+    a: {
+        const hasExt = fileName.endsWith(".sb3")
+        const end = fileName.length - (hasExt ? 4 : 0)
+        for (let i = end; i;) {
+            switch (fileName.charCodeAt(--i)) {
+                case 47: // '/'
+                case 92: // '\'
+                    fileName = fileName.slice(i + 1, end)
+                    break a
+            }
+        }
+        if (hasExt) fileName = fileName.slice(0, end)
+    }
 
-    let keyBytes = parseBase64("KzdnFCBRvq3" + fileName, false, 32)
+    const keyBytes = parseBase64("KzdnFCBRvq3" + fileName, false, 32)
 
     const name = "AES-CBC"
-    const algorithm: AesCbcParams = {
-        name,
-        iv: keyBytes.subarray(0, 16)
-    }
     const key = await crypto.subtle.importKey(
         "raw",
         keyBytes,
@@ -31,5 +35,9 @@ export const cryptoTransform = async (
         false,
         [mode]
     )
-    return crypto.subtle[mode](algorithm, key, data)
+    return crypto.subtle[mode](
+        { name, iv: keyBytes.subarray(0, 16) } as AesCbcParams,
+        key,
+        data
+    )
 }

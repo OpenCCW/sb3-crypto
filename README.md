@@ -68,21 +68,16 @@ const decryptedZip = await sb3Crypto.decrypt.decryptToJszip(data, sb3FileName)
 加密 `project.json` 并返回 sb3 ：
 
 ```js
+import md5 from "tinyhmacmd5"
+
 // 假设这是 project.json
 const projectJson = JSON.stringify({})
 
-/** @param {Uint8Array} bytes */
-const bytesToHex = (bytes) => (
-    bytes.toHex // ES2026
-        ? bytes.toHex()
-        : bytes.reduce((p, v) => p + (v >> 4 && '') + v.toString(16), '')
-)
+// 生成新文件名（不含扩展名）
+const fileName = md5('' + Date.now() + Math.random())
 
-// 生成完全随机的文件名
-const sb3FileName = bytesToHex(crypto.getRandomValues(new Uint8Array(16))) + '.sb3'
-
-// 加密 project.json 并返回 sb3 (string)
-const encryptedSb3 = await sb3Crypto.encrypt.encryptProjectJson(projectJson, sb3FileName)
+// 加密 project.json 并返回字符串
+const encryptedSb3 = await sb3Crypto.encrypt.encryptProjectJson(projectJson, fileName)
 
 // sb3 字符串转字节数组
 const encryptedSb3Bytes = new TextEncoder().encode(encryptedSb3)

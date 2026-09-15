@@ -1,4 +1,7 @@
-// 部分代码参考自 BenPaoDeXiaoZhi (MengFuzi)
+// 逆向代码：
+//   在 vendor~main 搜 .AES.
+//   在 vendor~main 搜 .generateAsync({
+//   在 vendor~main 搜 ["b", "x", "e", "y", "g", "i", "u", "c", "1", "2", "c"]
 
 import JSZip from "jszip";
 import { cryptoTransform } from "./crypto-transform.js";
@@ -8,11 +11,11 @@ import { u8aJoin } from "./u8a-join.js";
 export const encryptProjectJson = async (projectJson: string, fileName: string): Promise<string> => {
     let b64json = btoa(encodeURIComponent(projectJson));
     const n = b64json.length % 10;
-    b64json = b64json.slice(0, n) + 'bxeygiuc12c'[n] + b64json.slice(n + 1) + b64json[n]
+    b64json = b64json.slice(0, n) + 'bxeygiuc12'[n] + b64json.slice(n + 1) + b64json[n]
 
-    const sb3 = new JSZip();
-    sb3.file("project.json", b64json);
-    const sb3Bytes = await sb3.generateAsync({
+    const zip = new JSZip();
+    zip.file("project.json", b64json);
+    const sb3Bytes = await zip.generateAsync({
         type: "uint8array",
         compression: "DEFLATE",
         compressionOptions: {
@@ -20,7 +23,7 @@ export const encryptProjectJson = async (projectJson: string, fileName: string):
         },
     });
 
-    const data = u8aJoin(sb3Bytes)
-    const encryptedBuffer = await cryptoTransform("encrypt", fileName, data);
+    const cipherData = u8aJoin(sb3Bytes)
+    const encryptedBuffer = await cryptoTransform("encrypt", fileName, cipherData);
     return bytesToBase64(new Uint8Array(encryptedBuffer))
 }

@@ -1,5 +1,3 @@
-// 部分代码参考自 BenPaoDeXiaoZhi (MengFuzi)
-
 // 逆向代码：
 //   在 vendor~main 搜 .AES.
 //   在 vendor~main 搜 .split(",")))
