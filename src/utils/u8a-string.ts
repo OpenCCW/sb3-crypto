@@ -39,7 +39,8 @@ export const u8aSplit = (u8a: Uint8Array): Uint8Array<ArrayBuffer> => {
                 end++
             }
             // 局部回退解析
-            out[oi++] = +(_decoder ||= new TextDecoder).decode(u8a.subarray(start, end))
+            _decoder ??= new TextDecoder;
+            out[oi++] = +_decoder.decode(u8a.subarray(start, end))
             // 指针跳过整个慢路径 token（本轮结束后 i++ 会正好跳过逗号，落在下一个 token 的首字符）
             i = end
             start = end + 1
