@@ -4,8 +4,8 @@
 //   在 vendor~main 搜 ["b", "x", "e", "y", "g", "i", "u", "c", "1", "2", "c"]
 
 import JSZip from "jszip";
-import { cryptoTransform } from "./utils/crypto-transform.js";
 import miniToBase64 from "mini-to-base64";
+import { cryptoTransform } from "./utils/crypto-transform.js";
 import { u8aJoin } from "./utils/u8a-string.js";
 
 export const encryptProjectJson = async (projectJson: string, fileName: string): Promise<string> => {
