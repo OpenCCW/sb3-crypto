@@ -57,7 +57,7 @@ const _decryptSb3 = async (data: Uint8Array, fileName: string): Promise<{
  * - 返回的 `jsonIsDecrypted`
  *   - `true` 则返回的 `json` 是经过解密的，`sb3` 和 `zip` 里的 `project.json` 未解密，  
  *     需自行 `zip.file("project.json", json)` ，然后自行使用 `zip.generateAsync` 生成新的 `sb3` 。  
- *   - `false` 则 `json` 未解密，返回的 `sb3` 和 `zip` 里的 `project.json` 未加密。  
+ *   - `false` 则 `json` 未加密，返回的 `sb3` 和 `zip` 里的 `project.json` 未加密。  
  */
 export const prepareDecrypt = async (data: Uint8Array | ArrayBuffer, fileName: string) => {
     if (data[Symbol.toStringTag] === 'ArrayBuffer')
