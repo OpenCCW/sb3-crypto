@@ -70,7 +70,7 @@ export const prepareDecrypt = async (data: Uint8Array | ArrayBuffer, fileName: s
         throw new Error(`failed to decrypt sb3: "project.json" not found in archive`);
     let json = await jsonFile.async("text");
 
-    const jsonIsEncrypted = /^[A-Za-z0-9+/]/.test(json);
+    const jsonIsEncrypted = !json.startsWith("{");
     if (jsonIsEncrypted) {
         const t = json.length - 1
         const n = t % 10
