@@ -7,7 +7,10 @@ import parseBase64 from "parse-base64-like-crypto-js";
 import { cryptoTransform } from "./crypto-transform.js";
 import { u8aSplit } from "./u8a-join.js";
 
-const _decryptSb3 = async (data: Uint8Array, fileName: string): Promise<Uint8Array> => {
+const _decryptSb3 = async (data: Uint8Array, fileName: string): Promise<{
+    sb3: Uint8Array,
+    sb3IsCopied: boolean
+}> => {
     if (data.length < 8)
         throw Error(`failed to decrypt sb3: data must have at least 8 bytes`);
 
@@ -17,59 +20,61 @@ const _decryptSb3 = async (data: Uint8Array, fileName: string): Promise<Uint8Arr
             // PK ....
             // [80, 75, 3, 4, 10, 0, 0, 0]
             // 未加密。
-            return new Uint8Array(data)
+            return { sb3: data, sb3IsCopied: false }
         case 0x377abc:
             // 7z ....
             // [55, 122, 188, 175, 9, 5, 2, 7]
             // zip 头被改成 7z 头（混淆），这里把它改回来。
             // 为了防止 Buffer 类型导致意外情况，这里不能用 slice 。
-            const out = new Uint8Array(data);
-            out[0] = 80
-            out[1] = 75
-            out[2] = 3
-            out[3] = 4
-            out[4] = 10
-            out[5] = 0
-            out[6] = 0
-            out[7] = 0
-            return out;
+            const sb3 = new Uint8Array(data);
+            sb3[0] = 80
+            sb3[1] = 75
+            sb3[2] = 3
+            sb3[3] = 4
+            sb3[4] = 10
+            sb3[5] = 0
+            sb3[6] = 0
+            sb3[7] = 0
+            return { sb3, sb3IsCopied: true };
     }
 
     const cipherData = parseBase64(data)
     const decryptedBuffer = await cryptoTransform("decrypt", fileName, cipherData);
-    return u8aSplit(new Uint8Array(decryptedBuffer));
+    return {
+        sb3: u8aSplit(new Uint8Array(decryptedBuffer)),
+        sb3IsCopied: true
+    };
 }
 
-const _decrypt = async (data: Uint8Array | ArrayBuffer, fileName: string, mode: 0 | 1 | 2) => {
+const _prepareDecrypt = async (data: Uint8Array | ArrayBuffer, fileName: string) => {
     if (data[Symbol.toStringTag] === 'ArrayBuffer')
         data = new Uint8Array(data);
 
-    const sb3 = await _decryptSb3(data as Uint8Array, fileName);
+    const { sb3, sb3IsCopied } = await _decryptSb3(data as Uint8Array, fileName);
     const zip = await JSZip.loadAsync(sb3);
     const jsonFile = zip.file("project.json")
     if (!jsonFile)
         throw new Error(`failed to decrypt sb3: "project.json" not found in archive`);
     let json = await jsonFile.async("text");
 
-    if (/^[ \n\r\t]*\{/.test(json)) {
-        switch (mode) {
-            case 0: return sb3;
-            case 1: return json;
-            default: return zip;
-        }
+    const jsonIsEncrypted = /^[A-Za-z0-9+/]/.test(json);
+    if (jsonIsEncrypted) {
+        const t = json.length - 1
+        const n = t % 10
+        json = decodeURIComponent(atob(
+            json.slice(0, n) + json.charAt(t) + json.slice(n + 1, t)
+        ))
     }
 
-    const t = json.length - 1
-    const n = t % 10
-    json = decodeURIComponent(atob(
-        json.slice(0, n) + json.charAt(t) + json.slice(n + 1, t)
-    ))
+    return { sb3, sb3IsCopied, zip, json, jsonIsEncrypted };
+}
 
-    if (mode === 1) return json;
+export const decryptToSb3 = async (data: Uint8Array | ArrayBuffer, fileName: string): Promise<Uint8Array> => {
+    const { sb3, sb3IsCopied, zip, json, jsonIsEncrypted } = await _prepareDecrypt(data, fileName);
+
+    if (!jsonIsEncrypted) return sb3IsCopied ? sb3 : new Uint8Array(sb3);
 
     zip.file("project.json", json)
-    if (mode === 2) return zip;
-
     return zip.generateAsync({
         type: "uint8array",
         compression: "DEFLATE",
@@ -79,14 +84,13 @@ const _decrypt = async (data: Uint8Array | ArrayBuffer, fileName: string, mode: 
     })
 }
 
-export const decryptToSb3 = (data: Uint8Array | ArrayBuffer, fileName: string) => (
-    _decrypt(data, fileName, 0) as Promise<Uint8Array>
-)
+export const decryptToProjectJson = async (data: Uint8Array | ArrayBuffer, fileName: string): Promise<string> => {
+    const { json } = await _prepareDecrypt(data, fileName);
+    return json;
+}
 
-export const decryptToProjectJson = (data: Uint8Array | ArrayBuffer, fileName: string) => (
-    _decrypt(data, fileName, 1) as Promise<string>
-)
-
-export const decryptToJszip = (data: Uint8Array | ArrayBuffer, fileName: string) => (
-    _decrypt(data, fileName, 2) as Promise<JSZip>
-)
+export const decryptToJszip = async (data: Uint8Array | ArrayBuffer, fileName: string): Promise<JSZip> => {
+    const { zip, json, jsonIsEncrypted } = await _prepareDecrypt(data, fileName);
+    if (jsonIsEncrypted) zip.file("project.json", json);
+    return zip;
+}
