@@ -33,7 +33,7 @@
   },
   "dependencies": {
     "jszip": "^3.10.1",
-    "parse-base64-like-crypto-js": "^0.0.1"
+    "parse-base64-like-crypto-js": "^0.1.0"
   },
   "devDependencies": {
     "@bddjr/rimraf": "^0.1.1",

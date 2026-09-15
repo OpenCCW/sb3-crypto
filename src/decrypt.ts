@@ -37,7 +37,7 @@ const _decryptSb3 = async (data: Uint8Array, fileName: string): Promise<Uint8Arr
             return out;
     }
 
-    const cipherData = parseBase64(new TextDecoder().decode(data))
+    const cipherData = parseBase64(data)
     const decryptedBuffer = await cryptoTransform("decrypt", fileName, cipherData);
     return u8aSplit(new Uint8Array(decryptedBuffer));
 }

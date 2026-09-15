@@ -17,15 +17,7 @@ export const cryptoTransform = async (
     if (fileName.endsWith(".sb3"))
         fileName = fileName.slice(0, -4)
 
-    let keyBytes = parseBase64("KzdnFCBRvq3" + fileName)
-
-    if (keyBytes.length > 32) {
-        keyBytes = keyBytes.subarray(0, 32)
-    } else if (keyBytes.length < 32) {
-        const b = new Uint8Array(32)
-        b.set(keyBytes)
-        keyBytes = b
-    }
+    let keyBytes = parseBase64("KzdnFCBRvq3" + fileName, false, 32)
 
     const name = "AES-CBC"
     const algorithm: AesCbcParams = {

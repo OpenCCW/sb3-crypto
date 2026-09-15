@@ -12,8 +12,8 @@ importers:
         specifier: ^3.10.1
         version: 3.10.1
       parse-base64-like-crypto-js:
-        specifier: ^0.0.1
-        version: 0.0.1
+        specifier: ^0.1.0
+        version: 0.1.0
     devDependencies:
       '@bddjr/rimraf':
         specifier: ^0.1.1
@@ -178,8 +178,8 @@ packages:
   pako@1.0.11:
     resolution: {integrity: sha512-4hLB8Py4zZce5s4yd9XzopqwVv/yGNhV1Bl8NTmCq1763HeK2+EwVTv+leGeL13Dnh2wfbqowVPXCIO0z4taYw==}
 
-  parse-base64-like-crypto-js@0.0.1:
-    resolution: {integrity: sha512-K7MnGCc4A/5SOW5m4XyvOxa29Z20B95LHeqSkMUc7fWHoPALxX2HHqT9FTDRCsxpe2dOUdOnXBJ0nVCGAx+kkw==}
+  parse-base64-like-crypto-js@0.1.0:
+    resolution: {integrity: sha512-G2UlHduN7CkFf3LIwCrQd0as4rEVTrYduTXr9KTOwOeWgbvcvCrulHQVVSMK1zR53pyaqtOlASnY5NZZiMjM/A==}
 
   process-nextick-args@2.0.1:
     resolution: {integrity: sha512-3ouUOpQhtgrbOa17J7+uxOTpITYWaGP7/AhoR3+A+/1e9skrzelGi/dXzEYyvbxubEF6Wn2ypscTKiKJFFn1ag==}
@@ -296,7 +296,7 @@ snapshots:
 
   pako@1.0.11: {}
 
-  parse-base64-like-crypto-js@0.0.1: {}
+  parse-base64-like-crypto-js@0.1.0: {}
 
   process-nextick-args@2.0.1: {}
 
