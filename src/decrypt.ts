@@ -46,7 +46,10 @@ const _decrypt = async (data: Uint8Array | ArrayBuffer, fileName: string, mode: 
 
     const sb3 = await _decryptSb3(data as Uint8Array, fileName);
     const zip = await JSZip.loadAsync(sb3);
-    let json = await zip.file("project.json")!.async("text");
+    const jsonFile = zip.file("project.json")
+    if (!jsonFile)
+        throw new Error(`failed to decrypt sb3: "project.json" not found in archive`);
+    let json = await jsonFile.async("text");
 
     if (/^[ \n\r\t]*\{/.test(json)) {
         switch (mode) {
