@@ -14,6 +14,6 @@ export const bytesToBase64: (bytes: Uint8Array<ArrayBuffer>) => string | Promise
                     const s = fr.result as string
                     resolve(s.slice(s.indexOf(',') + 1))
                 }
-                fr.readAsDataURL(new Blob([bytes]))
+                fr.readAsDataURL(new Blob([bytes], { type: "x" }))
             })
 )
