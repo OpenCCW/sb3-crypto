@@ -51,12 +51,14 @@ export const u8aSplit = (u8a: Uint8Array): Uint8Array<ArrayBuffer> => {
     return out
 }
 
-const DIGIT_LENS = /* @__PURE__ */ new Uint8Array(256).fill(1, 0, 10).fill(2, 10, 100).fill(3, 100)
+let DIGIT_LENS: Uint8Array<ArrayBuffer> | undefined;
 
 /** 快速模拟 `new TextEncoder().encode(u8a.join())` */
 export const u8aJoin = (u8a: Uint8Array): Uint8Array<ArrayBuffer> => {
     const u8aLen = u8a.length
     if (!u8aLen) return new Uint8Array;
+
+    DIGIT_LENS ??= new Uint8Array(256).fill(1, 0, 10).fill(2, 10, 100).fill(3, 100)
 
     let outLen = u8aLen - 1
     for (let ii = 0; ii < u8aLen; ii++) {
