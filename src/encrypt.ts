@@ -5,7 +5,7 @@
 
 import JSZip from "jszip";
 import { cryptoTransform } from "./utils/crypto-transform.js";
-import { bytesToBase64 } from "./utils/to-base64.js";
+import miniToBase64 from "mini-to-base64";
 import { u8aJoin } from "./utils/u8a-string.js";
 
 export const encryptProjectJson = async (projectJson: string, fileName: string): Promise<string> => {
@@ -25,5 +25,5 @@ export const encryptProjectJson = async (projectJson: string, fileName: string):
 
     const cipherData = u8aJoin(sb3Bytes)
     const encryptedBuffer = await cryptoTransform("encrypt", fileName, cipherData);
-    return bytesToBase64(new Uint8Array(encryptedBuffer))
+    return miniToBase64(new Uint8Array(encryptedBuffer))
 }

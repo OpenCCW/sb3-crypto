@@ -1,2 +1,3 @@
 minimumReleaseAgeExclude:
   - parse-base64-like-crypto-js
+  - mini-to-base64@0.0.1

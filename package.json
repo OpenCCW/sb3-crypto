@@ -33,6 +33,7 @@
   },
   "dependencies": {
     "jszip": "^3.10.1",
+    "mini-to-base64": "0.0.1",
     "parse-base64-like-crypto-js": "^0.1.0"
   },
   "devDependencies": {
