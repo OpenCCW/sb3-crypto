@@ -38,13 +38,11 @@ if (!response.ok) {
 }
 const data = await response.arrayBuffer()
 
-// 获取文件名
+// 更新 URL（跟随重定向）
 projectLinkURL.href = response.url
-let sb3FileName = projectLinkURL.pathname
-sb3FileName = sb3FileName.slice(sb3FileName.lastIndexOf('/') + 1)
 
-// 解密并返回 project.json (string)
-const decryptedProjectJson = await sb3Crypto.decrypt.decryptToProjectJson(data, sb3FileName)
+// 解密并返回 project.json（类型：字符串）
+const decryptedProjectJson = await sb3Crypto.decrypt.decryptToProjectJson(data, projectLinkURL.pathname)
 
 console.log('project.json', decryptedProjectJson)
 ```
