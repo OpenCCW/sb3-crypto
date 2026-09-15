@@ -61,6 +61,25 @@ const decryptedSb3 = await sb3Crypto.decrypt.decryptToSb3(data, sb3FileName)
 const decryptedZip = await sb3Crypto.decrypt.decryptToJszip(data, sb3FileName)
 ```
 
+也可以解密后自己处理返回的数据：
+
+```js
+/**
+ * 解密，然后自己处理返回的数据。  
+ * ⚠️ 更自由，但 **需要更谨慎** 。  
+ * - 返回的 `sb3IsCopied`
+ *   - `true` 则返回的 `sb3` 已拷贝（经过解密），  
+ *     但这 **不能** 代表返回的 `sb3` 和 `zip` 里的 `project.json` 是正确的。  
+ *   - `false` 则返回的 `sb3` 未经过拷贝（无需解密），它就是输入的 `data` 参数的值，  
+ *     但这 **不能** 代表返回的 `sb3` 和 `zip` 里的 `project.json` 是正确的。  
+ * - 返回的 `jsonIsDecrypted`
+ *   - `true` 则返回的 `json` 是经过解密的，`sb3` 和 `zip` 里的 `project.json` 未解密，  
+ *     需自行 `zip.file("project.json", json)` ，然后自行使用 `zip.generateAsync` 生成新的 `sb3` 。  
+ *   - `false` 则 `json` 未解密，返回的 `sb3` 和 `zip` 里的 `project.json` 未加密。  
+ */
+const { sb3, sb3IsCopied, zip, json, jsonIsDecrypted } = await sb3Crypto.decrypt.prepareDecrypt(data, fileName);
+```
+
 ### 加密
 
 加密 `project.json` 并返回 sb3 ：
