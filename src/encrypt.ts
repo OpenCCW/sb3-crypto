@@ -4,9 +4,9 @@
 //   在 vendor~main 搜 ["b", "x", "e", "y", "g", "i", "u", "c", "1", "2", "c"]
 
 import JSZip from "jszip";
-import { cryptoTransform } from "./crypto-transform.js";
-import { bytesToBase64 } from "./to-base64.js";
-import { u8aJoin } from "./u8a-join.js";
+import { cryptoTransform } from "./utils/crypto-transform.js";
+import { bytesToBase64 } from "./utils/to-base64.js";
+import { u8aJoin } from "./utils/u8a-join.js";
 
 export const encryptProjectJson = async (projectJson: string, fileName: string): Promise<string> => {
     let b64json = btoa(encodeURIComponent(projectJson));
