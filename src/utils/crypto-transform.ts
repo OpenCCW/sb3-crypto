@@ -18,7 +18,7 @@ export const cryptoTransform = async (
     if (i !== -1)
         fileName = fileName.slice(i + 1)
     // 取前 32 个字符
-    // （逆向的代码里没有这个）
+    // （逆向的代码里没有这个，但超出这个范围的字符都不会被使用）
     if (fileName.length > 32)
         fileName = fileName.slice(0, 32)
 
