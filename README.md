@@ -95,7 +95,7 @@ const projectJson = JSON.stringify({})
 // 你也可以直接用 Math.random() 随机生成 32 个字符的 hex ：
 //   let fileName = ""
 //   while (fileName.length < 32) {
-//     fileName += (0 | 16 * Math.random()).toString(16);
+//     fileName += (0 | 16 * Math.random()).toString(16)
 //   }
 const fileName = md5('' + Date.now() + Math.random())
 
