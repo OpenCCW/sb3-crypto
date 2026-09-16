@@ -6,7 +6,7 @@
 
 let _decoder: TextDecoder | undefined;
 
-/** 快速模拟 `Uint8Array.from(new TextDecoder().decode(u8a).split(","))` */
+/** 快速模拟 `new Uint8Array(new TextDecoder().decode(u8a).split(","))` */
 export const csbSplit = (input: Uint8Array): Uint8Array<ArrayBuffer> => {
     const inputLen = input.length
     // "".split(",") -> [""] -> [0]
