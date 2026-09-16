@@ -17,6 +17,10 @@ export const cryptoTransform = async (
     const i = Math.max(fileName.lastIndexOf('/'), fileName.lastIndexOf('\\'))
     if (i !== -1)
         fileName = fileName.slice(i + 1)
+    // 取前 32 个字符
+    // （逆向的代码里没有这个）
+    if (fileName.length > 32)
+        fileName = fileName.slice(0, 32)
 
     const keyBytes = parseBase64("KzdnFCBRvq3" + fileName, false, 32)
 
