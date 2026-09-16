@@ -2,7 +2,7 @@
   "compilerOptions": {
     "rootDir": "src",
     "outDir": "dist",
-    "lib": ["ES2021", "DOM", "ESNext.TypedArrays"],
+    "lib": ["ES2021", "DOM"],
     "target": "es2021",
     "declaration": true,
     "sourceMap": true,
