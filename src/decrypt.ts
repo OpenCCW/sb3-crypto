@@ -87,7 +87,7 @@ export const prepareDecrypt = async (data: Uint8Array | ArrayBuffer, fileName: s
     const zip = await JSZip.loadAsync(sb3);
     const jsonFile = zip.file("project.json")
     if (!jsonFile)
-        throw new Error(`failed to decrypt sb3: "project.json" not found in archive`);
+        throw Error(`failed to decrypt sb3: "project.json" not found in archive`);
     let json = await jsonFile.async("text");
 
     // 判断 json 是不是密文。
