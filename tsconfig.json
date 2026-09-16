@@ -5,6 +5,7 @@
     "lib": ["ES2021", "DOM", "ESNext.TypedArrays"],
     "target": "es2021",
     "declaration": true,
+    "sourceMap": true,
     "strict": true
   },
   "include": ["src"]
