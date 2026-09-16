@@ -82,7 +82,7 @@ const { sb3, sb3IsCopied, zip, json, jsonIsDecrypted } = await sb3Crypto.decrypt
 
 ### 加密
 
-加密 `project.json` 并返回 sb3 ：
+输入 `project.json` ，返回已加密的 sb3（像Base64）：
 
 ```js
 import md5 from "tinyhmacmd5"
