@@ -10,15 +10,11 @@ export const cryptoTransform = async (
     fileName: string,
     data: BufferSource
 ): Promise<ArrayBuffer> => {
-    // 去掉网址参数
-    let i = fileName.indexOf('?')
-    if (i !== -1)
-        fileName = fileName.slice(0, i)
     // 去掉 ".sb3" 扩展名
     if (fileName.endsWith(".sb3"))
         fileName = fileName.slice(0, -4)
     // 去掉前面的路径
-    i = Math.max(fileName.lastIndexOf('/'), fileName.lastIndexOf('\\'))
+    const i = Math.max(fileName.lastIndexOf('/'), fileName.lastIndexOf('\\'))
     if (i !== -1)
         fileName = fileName.slice(i + 1)
 
