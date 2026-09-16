@@ -1,4 +1,4 @@
-快速解密或加密 CCW 的 sb3 文件，基于 Web Crypto API + JSZip 实现。
+快速解密或加密 CCW 的 sb3 文件，主要基于 Web Crypto API + JSZip 实现。
 
 在线使用: https://openccw.github.io/download-sb3/
 
