@@ -60,6 +60,7 @@ const _decryptSb3 = async (data: Uint8Array, fileName: string): Promise<{
  *   - `false` 则 `json` 未加密，返回的 `sb3` 和 `zip` 里的 `project.json` 未加密。  
  */
 export const prepareDecrypt = async (data: Uint8Array | ArrayBuffer, fileName: string) => {
+    // 支持输入 ArrayBuffer 只是为了 Response.prototype.arrayBuffer 。
     if (data[Symbol.toStringTag] === 'ArrayBuffer')
         data = new Uint8Array(data);
 
@@ -70,6 +71,8 @@ export const prepareDecrypt = async (data: Uint8Array | ArrayBuffer, fileName: s
         throw new Error(`failed to decrypt sb3: "project.json" not found in archive`);
     let json = await jsonFile.async("text");
 
+    // 判断 json 是不是密文。
+    // 这个判断方式不支持开头有空白字符的 json ，但 vendor~main 里面的代码就是这么写的。
     const jsonIsCiphertext = !json.startsWith("{");
     if (jsonIsCiphertext) {
         const t = json.length - 1
