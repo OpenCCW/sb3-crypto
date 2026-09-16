@@ -1,5 +1,7 @@
 import * as encrypt from './encrypt.js'
+export type * from './encrypt.js'
 import * as decrypt from './decrypt.js'
+export type * from './decrypt.js'
 
 const sb3Crypto = {
     encrypt,
@@ -9,5 +11,5 @@ const sb3Crypto = {
 export {
     sb3Crypto as default,
     encrypt,
-    decrypt
+    decrypt,
 }

@@ -47,6 +47,25 @@ const _decryptSb3 = async (data: Uint8Array, fileName: string): Promise<{
 }
 
 /**
+ * - 返回的 `sb3IsCopied`
+ *   - `true` 则返回的 `sb3` 已拷贝（经过解密），  
+ *     但这 **不能** 代表返回的 `sb3` 和 `zip` 里的 `project.json` 是正确的。  
+ *   - `false` 则返回的 `sb3` 未经过拷贝（无需解密），它就是输入的 `data` 参数的值，  
+ *     但这 **不能** 代表返回的 `sb3` 和 `zip` 里的 `project.json` 是正确的。  
+ * - 返回的 `jsonIsDecrypted`
+ *   - `true` 则返回的 `json` 是经过解密的，`sb3` 和 `zip` 里的 `project.json` 未解密，  
+ *     需自行 `zip.file("project.json", json)` ，然后自行使用 `zip.generateAsync` 生成新的 `sb3` 。  
+ *   - `false` 则 `json` 未加密，返回的 `sb3` 和 `zip` 里的 `project.json` 未加密。  
+ */
+export interface PrepareDecryptResult {
+    sb3: Uint8Array;
+    sb3IsCopied: boolean;
+    zip: JSZip;
+    json: string;
+    jsonIsDecrypted: boolean;
+}
+
+/**
  * 解密，然后自己处理返回的数据。  
  * ⚠️ 更自由，但 **需要更谨慎** 。  
  * - 返回的 `sb3IsCopied`
@@ -59,7 +78,7 @@ const _decryptSb3 = async (data: Uint8Array, fileName: string): Promise<{
  *     需自行 `zip.file("project.json", json)` ，然后自行使用 `zip.generateAsync` 生成新的 `sb3` 。  
  *   - `false` 则 `json` 未加密，返回的 `sb3` 和 `zip` 里的 `project.json` 未加密。  
  */
-export const prepareDecrypt = async (data: Uint8Array | ArrayBuffer, fileName: string) => {
+export const prepareDecrypt = async (data: Uint8Array | ArrayBuffer, fileName: string): Promise<PrepareDecryptResult> => {
     // 支持输入 ArrayBuffer 只是为了 Response.prototype.arrayBuffer 。
     if (data[Symbol.toStringTag] === 'ArrayBuffer')
         data = new Uint8Array(data);
