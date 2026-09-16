@@ -5,7 +5,7 @@
 import JSZip from "jszip";
 import parseBase64 from "parse-base64-like-crypto-js";
 import { cryptoTransform } from "./utils/crypto-transform.js";
-import { u8aSplit } from "./utils/u8a-string.js";
+import { u8aSplit } from "./utils/comma-separated-bytes.js";
 
 const _decryptSb3 = async (data: Uint8Array, fileName: string): Promise<{
     sb3: Uint8Array,
