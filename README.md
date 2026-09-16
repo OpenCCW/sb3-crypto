@@ -2,6 +2,10 @@
 
 在线使用: https://openccw.github.io/download-sb3/
 
+> [!NOTE]  
+> sb3 文件名去掉结尾的 `.sb3` 扩展名之后，前 32 个字符会被作为解密时使用的密钥。  
+> 不得擅自重命名已加密的 sb3 文件。  
+
 ## 安装
 
 ### npm
