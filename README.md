@@ -86,7 +86,7 @@ const { sb3, sb3IsCopied, zip, json, jsonIsDecrypted } = await sb3Crypto.decrypt
 
 ### 加密
 
-输入 `project.json` ，返回已加密的 sb3（像Base64）：
+输入 `project.json` ，返回已加密的 sb3（Base64字符串）：
 
 ```js
 import md5 from "tinyhmacmd5"
@@ -103,7 +103,7 @@ const projectJson = JSON.stringify({})
 //   }
 const fileName = md5('' + Date.now() + Math.random())
 
-// 加密 project.json 并返回字符串
+// 加密 project.json ，返回已加密的 sb3（Base64字符串）
 const encryptedSb3 = await sb3Crypto.encrypt.encryptProjectJson(projectJson, fileName)
 
 // sb3 字符串转字节数组

@@ -8,7 +8,7 @@ import miniToBase64 from "mini-to-base64";
 import { cryptoTransform } from "./utils/crypto-transform.js";
 import { csbJoin } from "./utils/comma-separated-bytes.js";
 
-/** 输入 `project.json` ，返回已加密的 sb3（像Base64） */
+/** 输入 `project.json` ，返回已加密的 sb3（Base64字符串） */
 export const encryptProjectJson = async (projectJson: string, fileName: string): Promise<string> => {
     let b64json = btoa(encodeURIComponent(projectJson));
     const n = b64json.length % 10;
