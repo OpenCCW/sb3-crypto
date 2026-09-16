@@ -1,7 +1,7 @@
 {
   "name": "@openccw/sb3-crypto",
   "version": "0.2.0",
-  "description": "基于 Web Crypto API + JSZip 实现 CCW sb3 文件的加密和解密。",
+  "description": "快速解密或加密 CCW 的 sb3 文件，基于 Web Crypto API + JSZip 实现。",
   "author": "bddjr",
   "license": "Unlicense",
   "type": "module",
