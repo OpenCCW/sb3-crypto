@@ -14,17 +14,17 @@ export const encryptProjectJson = async (projectJson: string, fileName: string):
     const n = b64json.length % 10;
     b64json = b64json.slice(0, n) + 'bxeygiuc12'[n] + b64json.slice(n + 1) + b64json.charAt(n)
 
-    const zip = new JSZip();
-    zip.file("project.json", b64json);
-    const sb3Bytes = await zip.generateAsync({
-        type: "uint8array",
-        compression: "DEFLATE",
-        compressionOptions: {
-            level: 6,
-        },
-    });
+    const sb3Bytes = await (
+        new JSZip()
+            .file("project.json", b64json)
+            .generateAsync({
+                type: "uint8array",
+                compression: "DEFLATE",
+                compressionOptions: { level: 6 },
+            })
+    )
 
     const csb = csbJoin(sb3Bytes)
-    const encryptedBuffer = await cryptoTransform("encrypt", fileName, csb);
+    const encryptedBuffer = await cryptoTransform("encrypt", fileName, csb)
     return miniToBase64(new Uint8Array(encryptedBuffer))
 }

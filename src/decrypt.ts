@@ -113,17 +113,17 @@ export const prepareDecrypt = async (data: Uint8Array | ArrayBuffer, fileName: s
 /** 解密并返回 `Uint8Array` ，返回值经过拷贝。 */
 export const decryptToSb3 = async (data: Uint8Array | ArrayBuffer, fileName: string): Promise<Uint8Array> => {
     const { sb3, sb3IsCopied, zip, json, jsonIsDecrypted } = await prepareDecrypt(data, fileName);
-
-    if (!jsonIsDecrypted) return sb3IsCopied ? sb3 : new Uint8Array(sb3);
-
-    zip.file("project.json", json)
-    return zip.generateAsync({
-        type: "uint8array",
-        compression: "DEFLATE",
-        compressionOptions: {
-            level: 6,
-        },
-    })
+    return jsonIsDecrypted
+        ? zip
+            .file("project.json", json)
+            .generateAsync({
+                type: "uint8array",
+                compression: "DEFLATE",
+                compressionOptions: { level: 6 },
+            })
+        : sb3IsCopied
+            ? sb3
+            : new Uint8Array(sb3)
 }
 
 /** 解密并返回 `project.json` */
@@ -135,6 +135,7 @@ export const decryptToProjectJson = async (data: Uint8Array | ArrayBuffer, fileN
 /** 解密并返回 `JSZip` */
 export const decryptToJszip = async (data: Uint8Array | ArrayBuffer, fileName: string): Promise<JSZip> => {
     const { zip, json, jsonIsDecrypted } = await prepareDecrypt(data, fileName);
-    if (jsonIsDecrypted) zip.file("project.json", json);
-    return zip;
+    return jsonIsDecrypted
+        ? zip.file("project.json", json)
+        : zip
 }
