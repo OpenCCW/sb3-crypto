@@ -70,8 +70,8 @@ export const prepareDecrypt = async (data: Uint8Array | ArrayBuffer, fileName: s
         throw new Error(`failed to decrypt sb3: "project.json" not found in archive`);
     let json = await jsonFile.async("text");
 
-    const jsonIsEncrypted = !json.startsWith("{");
-    if (jsonIsEncrypted) {
+    const jsonIsCiphertext = !json.startsWith("{");
+    if (jsonIsCiphertext) {
         const t = json.length - 1
         const n = t % 10
         json = decodeURIComponent(atob(
@@ -84,7 +84,7 @@ export const prepareDecrypt = async (data: Uint8Array | ArrayBuffer, fileName: s
         sb3IsCopied,
         zip,
         json,
-        jsonIsDecrypted: jsonIsEncrypted
+        jsonIsDecrypted: jsonIsCiphertext
     };
 }
 

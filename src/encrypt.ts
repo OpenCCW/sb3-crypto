@@ -23,7 +23,7 @@ export const encryptProjectJson = async (projectJson: string, fileName: string):
         },
     });
 
-    const cipherData = u8aJoin(sb3Bytes)
-    const encryptedBuffer = await cryptoTransform("encrypt", fileName, cipherData);
+    const u8aStr = u8aJoin(sb3Bytes)
+    const encryptedBuffer = await cryptoTransform("encrypt", fileName, u8aStr);
     return miniToBase64(new Uint8Array(encryptedBuffer))
 }
