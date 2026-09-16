@@ -91,8 +91,12 @@ import md5 from "tinyhmacmd5"
 const projectJson = JSON.stringify({})
 
 // 生成新文件名（不含扩展名）。
-// 逆向 vendor~main 可以看到是用了 md5 ，
-// 你也可以直接用 Math.random() 随机生成 32 个字符的 hex 。
+// 逆向 vendor~main 可以看到用了 md5 。
+// 你也可以直接用 Math.random() 随机生成 32 个字符的 hex ：
+//   let fileName = ""
+//   while (fileName.length < 32) {
+//     fileName += (0 | 16 * Math.random()).toString(16);
+//   }
 const fileName = md5('' + Date.now() + Math.random())
 
 // 加密 project.json 并返回字符串
