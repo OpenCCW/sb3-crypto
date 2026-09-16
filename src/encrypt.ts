@@ -10,13 +10,13 @@ import { csbJoin } from "./utils/comma-separated-bytes.js";
 
 /** 输入 `project.json` ，返回已加密的 sb3（Base64字符串） */
 export const encryptProjectJson = async (projectJson: string, fileName: string): Promise<string> => {
-    let b64json = btoa(encodeURIComponent(projectJson));
-    const n = b64json.length % 10;
-    b64json = b64json.slice(0, n) + 'bxeygiuc12'[n] + b64json.slice(n + 1) + b64json.charAt(n)
+    let jsonCiphertext = btoa(encodeURIComponent(projectJson));
+    const n = jsonCiphertext.length % 10;
+    jsonCiphertext = jsonCiphertext.slice(0, n) + 'bxeygiuc12'[n] + jsonCiphertext.slice(n + 1) + jsonCiphertext.charAt(n)
 
     const sb3Bytes = await (
         new JSZip()
-            .file("project.json", b64json)
+            .file("project.json", jsonCiphertext)
             .generateAsync({
                 type: "uint8array",
                 compression: "DEFLATE",
