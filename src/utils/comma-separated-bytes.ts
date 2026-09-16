@@ -33,7 +33,8 @@ export const csbSplit = (input: Uint8Array): Uint8Array<ArrayBuffer> => {
             value = 0
             start = i + 1
         } else {
-            // [慢路径] 发现非数字字符，子循环快速扫描到本 token 结尾
+            // [慢路径] 发现非数字字符，子循环快速扫描到本 token 结尾。
+            // 正常的文件不会触发慢路径，但为了保证解析结果一致，所以保留了慢路径。
             let end = i + 1
             while (end < inputLen && input[end] !== 44) {
                 end++
@@ -51,18 +52,18 @@ export const csbSplit = (input: Uint8Array): Uint8Array<ArrayBuffer> => {
     return out
 }
 
-let DIGIT_LENS: Uint8Array<ArrayBuffer> | undefined;
+let _DIGIT_LENS: Uint8Array<ArrayBuffer> | undefined;
 
 /** 快速模拟 `new TextEncoder().encode(u8a.join())` */
 export const csbJoin = (input: Uint8Array): Uint8Array<ArrayBuffer> => {
     const inputLen = input.length
     if (!inputLen) return new Uint8Array;
 
-    DIGIT_LENS ??= new Uint8Array(256).fill(1, 0, 10).fill(2, 10, 100).fill(3, 100)
+    _DIGIT_LENS ??= new Uint8Array(256).fill(1, 0, 10).fill(2, 10, 100).fill(3, 100)
 
     let outLen = inputLen - 1
     for (let ii = 0; ii < inputLen; ii++) {
-        outLen += DIGIT_LENS[input[ii]]
+        outLen += _DIGIT_LENS[input[ii]]
     }
 
     const out = new Uint8Array(outLen)

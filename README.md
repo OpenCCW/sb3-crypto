@@ -1,4 +1,4 @@
-基于 Web Crypto API + JSZip 实现 CCW sb3 文件的加密和解密。
+快速解密或加密 CCW 的 sb3 文件，基于 Web Crypto API + JSZip 实现。
 
 在线使用: https://openccw.github.io/download-sb3/
 
@@ -90,7 +90,9 @@ import md5 from "tinyhmacmd5"
 // 假设这是 project.json
 const projectJson = JSON.stringify({})
 
-// 生成新文件名（不含扩展名）
+// 生成新文件名（不含扩展名）。
+// 逆向 vendor~main 可以看到是用了 md5 ，
+// 你也可以直接用 Math.random() 随机生成 32 个字符的 hex 。
 const fileName = md5('' + Date.now() + Math.random())
 
 // 加密 project.json 并返回字符串
