@@ -6,7 +6,7 @@
 import JSZip from "jszip";
 import miniToBase64 from "mini-to-base64";
 import { cryptoTransform } from "./utils/crypto-transform.js";
-import { u8aJoin } from "./utils/comma-separated-bytes.js";
+import { csbJoin } from "./utils/comma-separated-bytes.js";
 
 export const encryptProjectJson = async (projectJson: string, fileName: string): Promise<string> => {
     let b64json = btoa(encodeURIComponent(projectJson));
@@ -23,7 +23,7 @@ export const encryptProjectJson = async (projectJson: string, fileName: string):
         },
     });
 
-    const u8aStr = u8aJoin(sb3Bytes)
-    const encryptedBuffer = await cryptoTransform("encrypt", fileName, u8aStr);
+    const csb = csbJoin(sb3Bytes)
+    const encryptedBuffer = await cryptoTransform("encrypt", fileName, csb);
     return miniToBase64(new Uint8Array(encryptedBuffer))
 }
